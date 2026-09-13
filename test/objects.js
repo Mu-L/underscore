@@ -362,6 +362,10 @@
     // Comparisons involving `NaN`.
     assert.ok(_.isEqual(NaN, NaN), '`NaN` is equal to `NaN`');
     assert.ok(_.isEqual(new Number(NaN), NaN), 'Object(`NaN`) is equal to `NaN`');
+    assert.ok(_.isEqual(NaN, new Number(NaN)), 'Commutative equality is implemented for `NaN` and its object wrapper');
+    assert.ok(_.isEqual([NaN], [new Number(NaN)]), 'Wrapped `NaN` is equivalent inside arrays');
+    assert.ok(_.isEqual({value: NaN}, {value: new Number(NaN)}), 'Wrapped `NaN` is equivalent inside objects');
+    assert.ok(!_.isEqual(NaN, new Number(79)), '`NaN` is not equal to a finite number object');
     assert.ok(!_.isEqual(61, NaN), 'A number primitive is not equal to `NaN`');
     assert.ok(!_.isEqual(new Number(79), NaN), 'A number object is not equal to `NaN`');
     assert.ok(!_.isEqual(Infinity, NaN), '`Infinity` is not equal to `NaN`');
