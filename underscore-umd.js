@@ -512,7 +512,7 @@
       // `null` or `undefined` only equal to itself (strict comparison).
       if (a == null || b == null) return tracker.abort();
       // `NaN`s are equivalent, but non-reflexive.
-      if (a !== a) {
+      if (a !== a && typeof b !== 'object') {
         if (b !== b) continue;
         return tracker.abort();
       }
