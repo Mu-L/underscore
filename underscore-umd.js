@@ -1502,7 +1502,8 @@
   function max(obj, iteratee, context) {
     var result = -Infinity, lastComputed = -Infinity,
         value, computed;
-    if (iteratee == null || (typeof iteratee == 'number' && obj != null && typeof obj[0] != 'object')) {
+    if (obj == null) return result;
+    if (iteratee == null || (typeof iteratee == 'number' && typeof obj[0] != 'object')) {
       obj = isArrayLike(obj) ? obj : values(obj);
       for (var i = 0, length = obj.length; i < length; i++) {
         value = obj[i];
@@ -1527,7 +1528,8 @@
   function min(obj, iteratee, context) {
     var result = Infinity, lastComputed = Infinity,
         value, computed;
-    if (iteratee == null || (typeof iteratee == 'number' && obj != null && typeof obj[0] != 'object')) {
+    if (obj == null) return result;
+    if (iteratee == null || (typeof iteratee == 'number' && typeof obj[0] != 'object')) {
       obj = isArrayLike(obj) ? obj : values(obj);
       for (var i = 0, length = obj.length; i < length; i++) {
         value = obj[i];
