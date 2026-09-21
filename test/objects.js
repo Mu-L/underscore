@@ -362,6 +362,10 @@
     // Comparisons involving `NaN`.
     assert.ok(_.isEqual(NaN, NaN), '`NaN` is equal to `NaN`');
     assert.ok(_.isEqual(new Number(NaN), NaN), 'Object(`NaN`) is equal to `NaN`');
+    assert.ok(_.isEqual(NaN, new Number(NaN)), 'Commutative equality is implemented for `NaN` and its object wrapper');
+    assert.ok(_.isEqual([NaN], [new Number(NaN)]), 'Wrapped `NaN` is equivalent inside arrays');
+    assert.ok(_.isEqual({value: NaN}, {value: new Number(NaN)}), 'Wrapped `NaN` is equivalent inside objects');
+    assert.ok(!_.isEqual(NaN, new Number(79)), '`NaN` is not equal to a finite number object');
     assert.ok(!_.isEqual(61, NaN), 'A number primitive is not equal to `NaN`');
     assert.ok(!_.isEqual(new Number(79), NaN), 'A number object is not equal to `NaN`');
     assert.ok(!_.isEqual(Infinity, NaN), '`Infinity` is not equal to `NaN`');
@@ -454,8 +458,10 @@
     assert.ok(!_.isEqual({x: 1, y: void 0}, {x: 1, z: 2}), 'Objects with identical keys and different values are not equivalent');
 
     // Extremely deeply nested objects (CVE-2026-27601).
+    var hasMap = (typeof Map === 'function');
+    var depthLimit = hasMap ? 100000 : 6000;
     a = b = 'v';
-    for (var i = 0; i < 30000; ++i) {
+    for (var i = 0; i < depthLimit; ++i) {
       a = {x: a};
       b = {x: b};
     }
@@ -463,6 +469,13 @@
     b = {x: b};
     assert.ok(!_.isEqual(a, b), 'Very deeply nested objects can be different');
     assert.ok(!_.isEqual(b, a), 'Commutative equality is implemented for very deeply nested objects');
+    if (!hasMap) {
+      for (i = 0; i < depthLimit; ++i) {
+        a = {x: a};
+        b = {x: b};
+      }
+      assert.raises(_.partial(_.isEqual, a, b), RangeError);
+    }
 
     // `A` contains nested objects and arrays.
     a = {
